@@ -1,0 +1,19 @@
+
+.icon{
+    width: 64px;
+    height: 64px;
+}
+
+
+.todo-title a{
+
+}
+
+.todo-info{
+    text-align: right;
+}
+
+
+.update{
+    padding: 20px 15px;
+}

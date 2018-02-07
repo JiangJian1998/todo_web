@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block head %}
+<link href="{{url_for('static',filename='datetime/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" media="screen"/>
+{% endblock %}
+{% block title %}添加TODO{% endblock%}
+{% block main %}
+
+{% if login==0 %}
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="myModalLabel">
+                    提示
+                </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2>请先登录，再操作。</h2>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="go_login()">去登录</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% endif %}
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col">
+            <center><h3><b>添加我的TODO</b></h3></center><br />
+            <form action="" method="post">
+                <div class="form-group form-group-lg">
+                    <label for="title">标题</label>
+                    <input type="text" id="title" placeholder="请输入标题" name="title" class="form-control">
+                </div>
+                <div class="form-group form-group-lg">
+                    <label for="content">内容</label>
+                    <textarea placeholder="todo..." id="content" name="content" rows="8" wrap="soft" class="form-control" style="resize:none;"></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <label class="col-auto control-label">选择deadline</label>
+                        <div class="input-group date form_date col-auto" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input class="form-control" size="16" id="end" name="end" type="text" value="" readonly>
+                            <div class="input-group-append">
+                                <button class="btn" type="button">
+                                    <img src="{{url_for('static',filename='svg/clock.svg')}}" alt="">
+                                </button>
+                            </div>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary"  style="float:right;">立即添加</button>
+                </div>
+
+            </form>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+{% block js %}
+<script src="{{url_for('static',filename='datetime/bootstrap-datetimepicker.min.js')}}"></script>
+<script src="{{url_for('static',filename='datetime/bootstrap-datetimepicker.zh-CN.js')}}"></script>
+<script src="{{url_for('static',filename='datetime/moment-with-locales.js')}}"></script>
+<script type="text/javascript">
+	$('.form_date').datetimepicker({
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		minView: 2,
+		forceParse: 0
+    });
+</script>
+<script>
+{% if login==0 %}
+$(function () { $('#myModal').modal({
+	keyboard: true
+})});
+{% endif %}
+
+function go_login(){
+    window.location.href='{{url_for('login')}}';
+}
+</script>
+{% endblock %}
+
+{% endblock%}

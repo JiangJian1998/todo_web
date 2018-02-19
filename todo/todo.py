@@ -177,7 +177,20 @@ def time_clc(end):
     end = str(end)
     return (datetime.datetime(int(end[:4]), int(end[5:7]), int(end[8:10])) - datetime.datetime.now()).days + 1
 
-
+@app.template_filter()
+def progress(begin_time, end_time):
+    if end_time==None or begin_time==None:
+        return None
+    end_time = str(end_time)
+    end_time = datetime.datetime(int(end_time[:4]), int(end_time[5:7]), int(end_time[8:10]))
+    begin_time = str(begin_time)
+    begin_time = datetime.datetime(int(begin_time[:4]), int(begin_time[5:7]), int(begin_time[8:10]))
+    rest = (end_time - datetime.datetime.now()).days + 1
+    if rest < 0:
+        return 100
+    all = (end_time - begin_time).days
+    print(round(100-rest/all*100))
+    return int(round(100-rest/all*100))
 
 
 if __name__ == '__main__':

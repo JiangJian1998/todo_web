@@ -5,6 +5,8 @@ from exts import db
 from utils import login_log
 import config
 
+
+
 app = Flask(__name__)
 app.config.from_object(config)  # 导入config
 db.init_app(app)  # database
@@ -26,8 +28,6 @@ update_project=[
     {'content':'不允许重复登录','p':0,'s':'action'}
 ]
 
-
-
 # 首页
 @app.route('/')
 def index():
@@ -43,6 +43,7 @@ def index():
     }
     return render_template('index.html', **context)
 
+# todo详情
 @app.route('/todo_detail/<todo_id>', methods=['GET', 'POST'])
 def todo_detail(todo_id):
     todo = Todo.query.filter(Todo.id == todo_id).first()
@@ -125,6 +126,25 @@ def login():
             return redirect(url_for('index'))
         return render_template('login.html')
 
+# 注册
+@app.route('/register/', methods=['GET', 'POST'])
+def register():
+    if request.method == 'GET':
+        return render_template('register.html')
+    else:
+        username = request.form.get('username')
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
+        user = User.query.filter(User.username==username).first()
+        if not user:
+            if password1 == password2:
+                db.session.add(User(username=username, password=password1))
+                db.session.commit()
+                user = User.query.filter(User.username == username).first()
+                session['user_id'] = user.id
+                return redirect(url_for('index'))
+        return u'失败'
+
 
 # 注销
 @app.route('/logout/')
@@ -194,4 +214,4 @@ def progress(begin_time, end_time):
 
 
 if __name__ == '__main__':
-    app.run(host='192.168.1.100', port=80)
+    app.run(host='192.168.31.100', port=80)#host='192.168.31.100', port=80

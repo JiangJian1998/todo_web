@@ -25,6 +25,7 @@ update_project=[
     {'content':'todo详情','p':80,'s':'info'},
     {'content':'用多对多写todo的tags','p':0,'s':'action'},
     {'content':'查找功能','p':0,'s':'action'},
+    {'content':'修改功能','p':0,'s':'action'},
     {'content':'不允许重复登录','p':0,'s':'action'}
 ]
 
@@ -33,9 +34,9 @@ update_project=[
 def index():
     user_id = session.get('user_id')
     context = {
-        'todo_no': Todo.query.filter(Todo.author_id==user_id, Todo.complete == 0, Todo.end!=None).order_by('end').all()
-                   +Todo.query.filter(Todo.author_id==user_id, Todo.complete == 0, Todo.end==None).order_by('begin').all(),
-        'todo_yes': Todo.query.filter(Todo.author_id==user_id, Todo.complete == 1).order_by('-complete_time').all(),
+        'todo_no': Todo.query.filter(Todo.author_id==user_id, Todo.complete==0, Todo.end!=None).order_by('end').all()
+                   +Todo.query.filter(Todo.author_id==user_id, Todo.complete==0, Todo.end==None).order_by('begin').all(),
+        'todo_yes': Todo.query.filter(Todo.author_id==user_id, Todo.complete==1).order_by('-complete_time').all(),
         'todo_all': Todo.query.filter(Todo.author_id==user_id).order_by('begin').all(),
         'now': time.strftime("%Y-%m-%d", time.localtime()),
         'cnt': [Todo.query.filter(Todo.author_id==user_id, Todo.complete == 0).count(), Todo.query.filter(Todo.author_id==user_id, Todo.complete == 1).count()],

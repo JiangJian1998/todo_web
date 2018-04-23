@@ -19,7 +19,7 @@ manager.add_command('db',db_manager)
 # manager命令
 @manager.command
 def runserver():
-    app.run()
+    app.run(host='192.168.31.100', port=80)
 
 
 if __name__ == '__main__':

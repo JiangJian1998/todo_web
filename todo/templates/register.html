@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='css/login_admin.css') }}">
 {% endblock %}
 {% block main %}
-<form class="form-horizontal needs-validation" action="" method="post">
+<form class="form-horizontal was-validated" name="reg" action="" method="post" >
     <div style="margin-top:200px;">
         <center><h2><b>用户注册</b></h2></center>
     </div>
@@ -13,42 +13,38 @@
     <div class="container">
         <div class="form-group">
             <label for="username">用户名</label>
-            <input type="text" class="form-control" name="username" id="username" placeholder="User Name" required>
+            <input type="text" class="form-control" name="username" id="username" placeholder="User Name">
             <div class="valid-feedback">看上去不错！</div>
+            <div class="invalid-feedback">请输入密码！</div>
         </div>
         <div class="form-group">
             <label for="password1">登录密码</label>
-            <input type="password" class="form-control" name="password1" id="password1" placeholder="Password" required>
+            <input type="password" class="form-control" name="password1" id="password1" placeholder="Password" >
+            <div class="invalid-feedback">请输入密码！</div>
         </div>
         <div class="form-group">
             <label for="password2">确认密码</label>
-            <input type="password" class="form-control" name="password2" id="password2" placeholder="Password" required>
-            <div class="invalid-feedback">no！</div>
+            <input type="password" class="form-control" name="password2" id="password2" placeholder="Password" >
+            <div class="invalid-feedback">请确认密码！</div>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block">注册</button>
+            <button type="submit" onclick="return chk();" class="btn btn-primary btn-block">注册</button>
         </div>
     </div>
 </form>
 {% endblock %}
 {% block js %}
-<script>
-(function() {
-  'use strict';
-  window.addEventListener('load', function() {
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.getElementsByClassName('needs-validation');
-    // Loop over them and prevent submission
-    var validation = Array.prototype.filter.call(forms, function(form) {
-      form.addEventListener('submit', function(event) {
-        if (form.checkValidity() === false) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        form.classList.add('was-validated');
-      }, false);
-    });
-  }, false);
-})();
+<script language="JavaScript">
+function chk()
+{
+    if(reg.username.value == "")
+    {
+        reg.username.className += " invalid";
+        $.parser.parse();
+        return false;
+    }
+    return true;
+}
 </script>
+<!--<script src="{{ url_for('static',filename='js/check_reg.js') }}"></script>-->
 {% endblock %}

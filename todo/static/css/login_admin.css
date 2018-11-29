@@ -1,5 +1,6 @@
 .container{
+    margin: 10em auto;
     width: 400px;
-    margin: 0 auto;
+    height: 100%;
     background: #f3f3f3;
 }

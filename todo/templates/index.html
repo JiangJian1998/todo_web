@@ -18,97 +18,127 @@
 
 <div class="container-fluid row">
     <!--空白列-->
-    <div class="col"></div>
+    <div class="col">
+        {% for todo in pagination.items %}
+            <p>
+              {{todo.body}}
+            </p>
+        {% endfor %}
+        {%import 'todo_pages.html' as pg%}
+        {{pg.my_paginate(pagination,'index')}}
+
+    </div>
     <!--todo列表-->
     <div class="col">
-        <!--标签控制-->
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="uncompleted-tab" data-toggle="tab" href="#uncompleted" role="tab" aria-controls="uncompleted" aria-selected="true">待完成 <span class="badge badge-secondary">{{ cnt[0] }}</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="complete-tab" data-toggle="tab" href="#complete" role="tab" aria-controls="complete" aria-selected="false">已完成 <span class="badge badge-secondary">{{ cnt[1] }}</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">全部 <span class="badge badge-secondary">{{ cnt[0]+cnt[1] }}</span></a>
-            </li>
-        </ul>
-        <!--标签内容-->
-        <div class="tab-content" id="myTabContent">
-            <!--标签页1-->
-            <div class="tab-pane fade show active" id="uncompleted" role="tabpanel" aria-labelledby="uncompleted-tab">
-                <ul class="list-group">
-                    {% for todo in todo_no %}
+        <div>
+            <!--标签控制-->
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="uncompleted-tab" data-toggle="tab" href="#uncompleted" role="tab" aria-controls="uncompleted" aria-selected="true">待完成 <span class="badge badge-secondary">{{ cnt[0] }}</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="complete-tab" data-toggle="tab" href="#complete" role="tab" aria-controls="complete" aria-selected="false">已完成 <span class="badge badge-secondary">{{ cnt[1] }}</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">全部 <span class="badge badge-secondary">{{ cnt[0]+cnt[1] }}</span></a>
+                </li>
+            </ul>
+            <!--标签内容-->
+            <div class="tab-content" id="myTabContent">
+                <!--标签页1-->
+                <div class="tab-pane fade show active" id="uncompleted" role="tabpanel" aria-labelledby="uncompleted-tab">
+                    <ul class="list-group">
+                        {% for todo in todo_no %}
 
-                    {% with todo_time = todo.end|time_clc%}
-                    <li class="list-group-item
+                        {% with todo_time = todo.end|time_clc%}
+                        <li class="list-group-item
                     {% if todo_time == None %}list-group-item-secondary
                     {% elif todo_time>7 %}list-group-item-info
                     {% elif todo_time>=3 %}list-group-item-warning
                     {% else %}list-group-item-danger
                     {% endif %}">
-                        <div class="media">
-                            <img class="mr-3 icon" src="{{ url_for('static',filename='favicon.ico') }}"alt="">
-                            <div class="media-body">
-                                <h5 class="mt-0"><a href="{{ url_for('todo_detail',todo_id=todo.id) }}">{{ todo.title }}</a></h5>
-                                {{ todo.content }}
-                                <br><br>
-                                {% if todo_time == None %}{% elif todo_time>=0 %}
-                                <span class="float-left text-dark small">离deadline还有{{todo_time}}天</span>
-                                {% else %}
-                                <span class="float-left text-danger">已过{{todo_time|abs}}天</span>
-                                {% endif %}
-                                <span class="todo-time float-right">{{ todo.begin }}</span>
+                            <div class="media">
+                                <img class="mr-3 icon" src="{{ url_for('static',filename='favicon.ico') }}"alt="">
+                                <div class="media-body">
+                                    <h5 class="mt-0"><a href="{{ url_for('todo_detail',todo_id=todo.id) }}">{{ todo.title }}</a></h5>
+                                    {{ todo.content }}
+                                    <br><br>
+                                    {% if todo_time == None %}{% elif todo_time>=0 %}
+                                    <span class="float-left text-dark small">离deadline还有{{todo_time}}天</span>
+                                    {% else %}
+                                    <span class="float-left text-danger">已过{{todo_time|abs}}天</span>
+                                    {% endif %}
+                                    <span class="todo-time float-right">{{ todo.begin }}</span>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                    {% endwith %}
-                    {% endfor %}
-                </ul>
-            </div>
-            <!--标签页2-->
-            <div class="tab-pane fade" id="complete" role="tabpanel" aria-labelledby="complete-tab">
-                <ul class="list-group">
-                    {% for todo in todo_yes %}
-                    <li class="list-group-item list-group-item-success">
-                        <div class="media">
-                            <img class="mr-3 icon" src="{{ url_for('static',filename='favicon.ico') }}"alt="">
-                            <div class="media-body">
-                                <h5 class="mt-0"><a href="{{ url_for('todo_detail',todo_id=todo.id) }}">{{ todo.title }}</a></h5>
-                                {{ todo.content }}
-                                <br>
-                                <span class="todo-time float-right">完成时间：{{ todo.complete_time }}</span>
+                        </li>
+                        {% endwith %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!--标签页2-->
+                <div class="tab-pane fade" id="complete" role="tabpanel" aria-labelledby="complete-tab">
+                    <ul class="list-group">
+                        {% for todo in todo_yes %}
+                        <li class="list-group-item list-group-item-success">
+                            <div class="media">
+                                <img class="mr-3 icon" src="{{ url_for('static',filename='favicon.ico') }}"alt="">
+                                <div class="media-body">
+                                    <h5 class="mt-0"><a href="{{ url_for('todo_detail',todo_id=todo.id) }}">{{ todo.title }}</a></h5>
+                                    {{ todo.content }}
+                                    <br>
+                                    <span class="todo-time float-right">完成时间：{{ todo.complete_time }}</span>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-            <!--标签页3-->
-            <div class="tab-pane fade" id="all" role="tabpanel" aria-labelledby="all-tab">
-                <ul class="list-group">
-                    {% for todo in todo_all %}
-                    <li class="list-group-item">
-                        <div class="media">
-                            <img class="mr-3 icon" src="{{ url_for('static',filename='favicon.ico') }}"alt="">
-                            <div class="media-body">
-                                <h5 class="mt-0"><a href="{{ url_for('todo_detail',todo_id=todo.id) }}">{{ todo.title }}</a></h5>
-                                {{ todo.content }}
-                                <br><br>
-                                <span class="todo-time float-right">创建时间：{{ todo.begin }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!--标签页3-->
+                <div class="tab-pane fade" id="all" role="tabpanel" aria-labelledby="all-tab">
+                    <ul class="list-group">
+                        {% for todo in todo_all %}
+                        <li class="list-group-item">
+                            <div class="media">
+                                <img class="mr-3 icon" src="{{ url_for('static',filename='favicon.ico') }}"alt="">
+                                <div class="media-body">
+                                    <h5 class="mt-0"><a href="{{ url_for('todo_detail',todo_id=todo.id) }}">{{ todo.title }}</a></h5>
+                                    {{ todo.content }}
+                                    <br><br>
+                                    <span class="todo-time float-right">创建时间：{{ todo.begin }}</span>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                    {% endfor %}
-                </ul>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
+
         </div>
+            <nav aria-label="todo lists">
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item active">
+              <span class="page-link">
+                2
+                <span class="sr-only">(current)</span>
+              </span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
     </div>
     <!--更新列表-->
     <div class="update col">
         <div class="w-40 float-right">
             <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action active"><center><abbr title="看看更新了什么"><strong>更新动态</strong></abbr></center></a>
+                <span class="list-group-item active"><center><strong>更新动态</strong></center></span>
                 {% for project in pro %}
                 <a href="#" class="list-group-item list-group-item-{{project['s']}}">
                     {{project['content']}}

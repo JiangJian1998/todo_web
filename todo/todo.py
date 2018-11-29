@@ -30,17 +30,20 @@ update_project=[
 ]
 
 # 首页
-@app.route('/')
-def index():
+@app.route('/', methods = ['GET', 'POST'])
+@app.route('/index', methods = ['GET', 'POST'])
+@app.route('/index/<int:page>', methods = ['GET', 'POST'])
+def index(page=1):
     user_id = session.get('user_id')
     context = {
         'todo_no': Todo.query.filter(Todo.author_id==user_id, Todo.complete==0, Todo.end!=None).order_by('end').all()
                    +Todo.query.filter(Todo.author_id==user_id, Todo.complete==0, Todo.end==None).order_by('begin').all(),
-        'todo_yes': Todo.query.filter(Todo.author_id==user_id, Todo.complete==1).order_by('-complete_time').all(),
+        'todo_yes': Todo.query.filter(Todo.author_id==user_id, Todo.complete==1).order_by(Todo.complete_time.desc()).all(),
         'todo_all': Todo.query.filter(Todo.author_id==user_id).order_by('begin').all(),
         'now': time.strftime("%Y-%m-%d", time.localtime()),
         'cnt': [Todo.query.filter(Todo.author_id==user_id, Todo.complete == 0).count(), Todo.query.filter(Todo.author_id==user_id, Todo.complete == 1).count()],
-        'pro': update_project
+        'pro': update_project,
+        'pagination': Todo.query.filter(Todo.author_id==user_id).order_by('begin').paginate(page=page,per_page=3)
     }
     return render_template('index.html', **context)
 
@@ -210,9 +213,10 @@ def progress(begin_time, end_time):
     if rest < 0:
         return 100
     all = (end_time - begin_time).days
-    print(round(100-rest/all*100))
+    if(all==0):
+        return 100
     return int(round(100-rest/all*100))
 
 
 if __name__ == '__main__':
-    app.run(host='192.168.31.100', port=80)#host='192.168.31.100', port=80
+    app.run()#host='192.168.31.100', port=80
